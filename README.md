@@ -1,21 +1,25 @@
-# Daybook Homework Planner
+# Daybook homework planner
 
-Phone-friendly homework planner. Homework and attached photos are stored in the current browser on the current device.
+Daybook is a phone-friendly homework planner hosted as a static site on GitHub Pages. It uses Firebase Authentication for email/password accounts and requires email verification before opening the planner.
 
-## Private single-user sign-in
+## Turn on sign-up and sign-in
 
-The sign-in is configured by the site owner. There is no sign-up page. Deploy this Node app on a server host, then set these environment secrets in the host dashboard:
+The site owner needs to connect the site to a Firebase project once:
 
-- APP_USERNAME: the one username you choose
-- APP_PASSWORD: the password you choose (at least 12 characters)
-- NODE_ENV: production, so the HTTPS session cookie is marked secure
+1. Open the [Firebase console](https://console.firebase.google.com/) and create a project. The Spark plan can be used without adding billing details for Firebase Authentication.
+2. In **Build → Authentication**, choose **Get started**, then enable **Email/Password** as a sign-in provider.
+3. In **Project settings → General → Your apps**, register a **Web app** and copy its config values.
+4. Put the `apiKey`, `authDomain`, `projectId`, and `appId` values into `firebase-config.js` in this repository. These web config values identify the Firebase project; do not put a service-account JSON key or a user's password in the repository.
+5. In **Authentication → Settings → Authorized domains**, add `benhatami2015-svg.github.io`.
+6. Commit the change. GitHub Pages will publish it, and the account form will become active.
 
-Never put the username or password in the repository or send them in chat. The site will not allow sign-in until both credentials are set. Sessions expire after seven days and are cleared when the server restarts.
+Visitors can then choose **Sign up**, enter their email and password, and use the verification link Firebase emails them. Signing in with an unverified address sends another verification email and keeps the homework hidden. Verified users sign in with the same email and password.
 
-GitHub Pages is static hosting and cannot enforce this server-side login. After the private Node deployment is ready, disable the old GitHub Pages site so the public copy is no longer available. The GitHub repository itself is currently public, so its source code remains visible.
+## Homework storage
 
-## Run locally
+Assignments and photos are kept in browser storage on the device being used. The account login protects access to the planner, but homework does not sync between phones or browsers. Firebase Authentication handles accounts and verification; it does not store homework or photos.
 
-Install Node.js 18 or newer, set APP_USERNAME, APP_PASSWORD, and NODE_ENV=production in the environment, then run npm start.
+## Optional AI photo titles
 
-AI photo naming is optional and requires separate OpenAI API billing. Without OPENAI_API_KEY, take or attach photos and enter titles manually; the planner still works.
+AI naming is not enabled on GitHub Pages and needs a separately hosted server and an OpenAI API key with API billing. The planner works without it: take or upload a photo and type the assignment title yourself. Never put an OpenAI secret key in this repository or in browser code.
+
