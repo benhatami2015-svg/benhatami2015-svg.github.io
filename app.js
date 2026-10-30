@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'daybook-homework-v1';
+const STORAGE_KEY = window.daybookUser?.uid ? `daybook-homework-v1-${window.daybookUser.uid}` : 'daybook-homework-v1';
 const $ = (s) => document.querySelector(s);
 const dateInput = $('#assignedDate');
 const dialog = $('#homeworkDialog');
@@ -12,11 +12,9 @@ let view = 'week';
 let chosenFile = null;
 let fileDbPromise = null;
 
-if(!location.hostname.endsWith('github.io')){
- accountButton.title='Sign out';
- accountButton.setAttribute('aria-label','Sign out');
- accountButton.addEventListener('click',async()=>{try{await fetch('/api/logout',{method:'POST'})}finally{location.reload()}});
-}
+accountButton.title='Sign out';
+accountButton.setAttribute('aria-label','Sign out');
+accountButton.addEventListener('click',()=>window.daybookSignOut?.());
 
 function loadData(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {items:[]}}catch{return {items:[]}}}
 function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
