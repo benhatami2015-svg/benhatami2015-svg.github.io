@@ -48,15 +48,8 @@ function render(){
  $('#sectionTitle').innerHTML=`${weekOffset===0?'The week ahead':'Your week'} <span id="dateRange">${fmt(monday)} – ${fmt(weekEnd)}</span>`;
  const weekItems=data.items.filter(x=>itemStart(x)<=weekEnd&&itemDue(x)>=monday);
  $('#weekCount').textContent=weekItems.filter(x=>!x.done).length;
- $('#totalCount').textContent=weekItems.length;
- const done=weekItems.filter(x=>x.done).length;
- $('#doneCount').innerHTML=`${done} <small>of ${weekItems.length}</small>`;
- $('#progressFill').style.width=weekItems.length?`${done/weekItems.length*100}%`:'0%';
- const upcoming=weekItems.filter(x=>!x.done&&itemDue(x)>=today).sort((a,b)=>itemDue(a)-itemDue(b))[0];
- $('#nextDue').textContent=upcoming?fmt(itemDue(upcoming),{month:'short',day:'numeric'}):'All clear';
- $('#nextDueLabel').textContent=upcoming?upcoming.title:'You’re all caught up';
  $('#crumbView').textContent=view==='all'?'All homework':'This week';
- $('#pageTitle').innerHTML=view==='all'?'All your <em>homework.</em>':'Make room for <em>what’s next.</em>';
+ $('#pageTitle').innerHTML=view==='all'?'All your <em>homework.</em>':'Your <em>homework.</em>';
  const strip=$('#dayStrip');strip.innerHTML='';
  for(let i=0;i<7;i++){
    const d=addDays(monday,i), items=dayItems(d), button=document.createElement('button');
