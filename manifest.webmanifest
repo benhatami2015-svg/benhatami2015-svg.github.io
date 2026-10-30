@@ -1,0 +1,11 @@
+{
+  "name": "Daybook Homework Planner",
+  "short_name": "Daybook",
+  "description": "Keep homework, photos and due dates together.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f7f3",
+  "theme_color": "#7667c8",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
+
