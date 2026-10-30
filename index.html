@@ -28,9 +28,21 @@
         <input id="authPassword" class="text-input" type="password" autocomplete="current-password" minlength="6" placeholder="At least 6 characters" required />
         <button class="primary-button auth-submit" id="authSubmit" type="submit">Sign in <span>→</span></button>
       </form>
+      <button class="auth-switch auth-forgot" id="forgotPassword" type="button">Forgot password?</button>
       <button class="auth-switch" id="authSwitch" type="button">New to Daybook? <strong>Sign up</strong></button>
       <button class="auth-switch" id="resendVerification" type="button" hidden>Resend verification email</button>
       <button class="auth-switch" id="checkVerification" type="button" hidden>I’ve verified my email</button>
+      <section class="password-reset-panel" id="passwordResetPanel" hidden aria-labelledby="resetTitle">
+        <h2 id="resetTitle">Reset your password</h2>
+        <p>Enter your account email and we’ll send you a link to choose a new password.</p>
+        <form id="passwordResetForm">
+          <label class="field-label" for="resetEmail">Email address</label>
+          <input id="resetEmail" class="text-input" type="email" autocomplete="email" placeholder="you@example.com" required />
+          <button class="primary-button auth-submit" id="resetSubmit" type="submit">Send reset email <span>→</span></button>
+        </form>
+        <p class="reset-message" id="resetMessage" role="status" aria-live="polite"></p>
+        <button class="auth-switch" id="backToSignIn" type="button">Back to sign in</button>
+      </section>
       <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
       <p class="auth-setup" id="authSetup" hidden>Account sign-in is not set up yet. The site owner needs to finish the Firebase setup in the project README.</p>
     </section>
@@ -75,7 +87,7 @@
       <div class="modal-actions"><button type="button" class="cancel-button" id="cancelDialog">Cancel</button><button class="primary-button" type="submit">Add to my week <span>→</span></button></div>
     </form>
   </dialog>
-  <script type="module" src="auth.js?v=4"></script>
+  <script type="module" src="auth.js?v=5"></script>
 </body>
 </html>
 
