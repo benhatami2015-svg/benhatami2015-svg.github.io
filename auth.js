@@ -91,6 +91,13 @@ if (!firebaseConfigured) {
       planner.hidden = true;
       return;
     }
+    const previousUid = sessionStorage.getItem('daybook-auth-uid');
+    if (previousUid && previousUid !== user.uid) {
+      sessionStorage.setItem('daybook-auth-uid', user.uid);
+      location.reload();
+      return;
+    }
+    sessionStorage.setItem('daybook-auth-uid', user.uid);
     window.daybookUser = { uid: user.uid, email: user.email };
     window.daybookAuthEnabled = true;
     authScreen.hidden = true;
