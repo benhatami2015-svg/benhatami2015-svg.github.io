@@ -8,6 +8,12 @@ const emailInput = $('#authEmail');
 const passwordInput = $('#authPassword');
 const submitButton = $('#authSubmit');
 const switchButton = $('#authSwitch');
+const forgotPasswordButton = $('#forgotPassword');
+const resetPanel = $('#passwordResetPanel');
+const resetForm = $('#passwordResetForm');
+const resetEmailInput = $('#resetEmail');
+const resetSubmitButton = $('#resetSubmit');
+const resetMessage = $('#resetMessage');
 const resendButton = $('#resendVerification');
 const checkVerificationButton = $('#checkVerification');
 const message = $('#authMessage');
@@ -30,6 +36,7 @@ function setMode(nextMode) {
   submitButton.innerHTML = signingUp ? 'Sign up <span>→</span>' : 'Sign in <span>→</span>';
   switchButton.innerHTML = signingUp ? 'Already have an account? <strong>Sign in</strong>' : 'New to Daybook? <strong>Sign up</strong>';
   passwordInput.autocomplete = signingUp ? 'new-password' : 'current-password';
+  forgotPasswordButton.hidden = signingUp;
   showMessage('');
 }
 
@@ -46,9 +53,57 @@ if (!firebaseConfigured) {
   const { initializeApp } = await import('https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js');
   const {
     getAuth, createUserWithEmailAndPassword, sendEmailVerification,
-    signInWithEmailAndPassword, signOut, onAuthStateChanged, reload
+    signInWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged, reload
   } = await import('https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js');
   auth = getAuth(initializeApp(firebaseConfig));
+
+  forgotPasswordButton.addEventListener('click', () => {
+    authForm.hidden = true;
+    switchButton.hidden = true;
+    forgotPasswordButton.hidden = true;
+    resendButton.hidden = true;
+    checkVerificationButton.hidden = true;
+    resetPanel.hidden = false;
+    resetEmailInput.value = emailInput.value.trim();
+    resetMessage.textContent = '';
+    resetMessage.classList.remove('error');
+    resetEmailInput.focus();
+  });
+
+  $('#backToSignIn').addEventListener('click', () => {
+    resetPanel.hidden = true;
+    authForm.hidden = false;
+    switchButton.hidden = false;
+    forgotPasswordButton.hidden = mode === 'signup';
+    const unverifiedUser = auth.currentUser && !auth.currentUser.emailVerified;
+    resendButton.hidden = !unverifiedUser;
+    checkVerificationButton.hidden = !unverifiedUser;
+    resetMessage.textContent = '';
+  });
+
+  resetForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    resetSubmitButton.disabled = true;
+    resetMessage.classList.remove('error');
+    resetMessage.textContent = 'Sending password reset email…';
+    try {
+      await sendPasswordResetEmail(auth, resetEmailInput.value.trim());
+      resetMessage.textContent = 'If an account uses this email, a reset link is on its way. Check your inbox and junk mail. Open the link to choose a new password, then return here to sign in.';
+    } catch (error) {
+      if (error?.code === 'auth/invalid-email') {
+        resetMessage.textContent = 'Enter a valid email address.';
+      } else if (error?.code === 'auth/too-many-requests') {
+        resetMessage.textContent = 'Too many attempts. Please wait a little and try again.';
+      } else if (error?.code === 'auth/network-request-failed') {
+        resetMessage.textContent = 'Could not connect. Check your internet and try again.';
+      } else {
+        resetMessage.textContent = 'Could not send the reset email. Check the address and try again.';
+      }
+      resetMessage.classList.add('error');
+    } finally {
+      resetSubmitButton.disabled = false;
+    }
+  });
 
   authForm.addEventListener('submit', async event => {
     event.preventDefault();
