@@ -35,9 +35,11 @@ switchButton.addEventListener('click', () => setMode(mode === 'signin' ? 'signup
 
 if (!firebaseConfigured) {
   setupMessage.hidden = false;
-  authForm.hidden = true;
-  switchButton.hidden = true;
-  showMessage('');
+  setupMessage.textContent = 'Sign-up is not active yet. The site needs its Firebase connection finished before it can create accounts or send verification emails.';
+  authForm.addEventListener('submit', event => {
+    event.preventDefault();
+    showMessage('Firebase setup is still needed before an account can be created or verified.', true);
+  });
 } else {
   const { initializeApp } = await import('https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js');
   const {
