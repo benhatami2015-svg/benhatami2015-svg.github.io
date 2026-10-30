@@ -1,4 +1,4 @@
-import { firebaseConfig, firebaseConfigured } from './firebase-config.js';
+import { firebaseConfig, firebaseConfigured } from './firebase-config.js?v=2';
 
 const $ = selector => document.querySelector(selector);
 const authScreen = $('#authScreen');
