@@ -15,7 +15,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app-shell">
+  <main class="auth-screen" id="authScreen">
+    <section class="auth-card" aria-labelledby="authTitle">
+      <a class="brand auth-brand" href="#" aria-label="Daybook home"><span class="brand-mark">d</span><span>daybook<span class="brand-dot">.</span></span></a>
+      <div class="section-kicker">YOUR STUDY SPACE</div>
+      <h1 id="authTitle">Welcome to <em>Daybook.</em></h1>
+      <p class="auth-intro" id="authIntro">Sign in to see your homework, or create an account to get started.</p>
+      <form id="authForm">
+        <label class="field-label" for="authEmail">Email address</label>
+        <input id="authEmail" class="text-input" type="email" autocomplete="email" placeholder="you@example.com" required />
+        <label class="field-label auth-password-label" for="authPassword">Password</label>
+        <input id="authPassword" class="text-input" type="password" autocomplete="current-password" minlength="6" placeholder="At least 6 characters" required />
+        <button class="primary-button auth-submit" id="authSubmit" type="submit">Sign in <span>→</span></button>
+      </form>
+      <button class="auth-switch" id="authSwitch" type="button">New to Daybook? <strong>Sign up</strong></button>
+      <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+      <p class="auth-setup" id="authSetup" hidden>Account sign-in is not set up yet. The site owner needs to finish the Firebase setup in the project README.</p>
+    </section>
+  </main>
+  <div class="app-shell" id="plannerApp" hidden>
     <aside class="sidebar">
       <a class="brand" href="#" aria-label="Daybook home"><span class="brand-mark">d</span><span>daybook<span class="brand-dot">.</span></span></a>
       <div class="sidebar-label">YOUR SPACE</div>
@@ -55,7 +73,7 @@
       <div class="modal-actions"><button type="button" class="cancel-button" id="cancelDialog">Cancel</button><button class="primary-button" type="submit">Add to my week <span>→</span></button></div>
     </form>
   </dialog>
-  <script src="app.js"></script>
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
 
