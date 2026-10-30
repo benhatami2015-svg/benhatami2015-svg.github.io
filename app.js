@@ -3,6 +3,7 @@ const $ = (s) => document.querySelector(s);
 const dateInput = $('#assignedDate');
 const dialog = $('#homeworkDialog');
 const form = $('#homeworkForm');
+const accountButton = $('#accountButton');
 const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 let data = loadData();
 let weekOffset = 0;
@@ -10,6 +11,12 @@ let selectedDay = 0;
 let view = 'week';
 let chosenFile = null;
 let fileDbPromise = null;
+
+if(!location.hostname.endsWith('github.io')){
+ accountButton.title='Sign out';
+ accountButton.setAttribute('aria-label','Sign out');
+ accountButton.addEventListener('click',async()=>{try{await fetch('/api/logout',{method:'POST'})}finally{location.reload()}});
+}
 
 function loadData(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {items:[]}}catch{return {items:[]}}}
 function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}
