@@ -8,6 +8,8 @@ const emailInput = $('#authEmail');
 const passwordInput = $('#authPassword');
 const submitButton = $('#authSubmit');
 const switchButton = $('#authSwitch');
+const resendButton = $('#resendVerification');
+const checkVerificationButton = $('#checkVerification');
 const message = $('#authMessage');
 const setupMessage = $('#authSetup');
 let mode = 'signin';
@@ -59,22 +61,58 @@ if (!firebaseConfigured) {
         const credential = await createUserWithEmailAndPassword(auth, email, password);
         const createdEmail = credential.user.email;
         await sendEmailVerification(credential.user);
-        await signOut(auth);
+        resendButton.hidden = false;
+        checkVerificationButton.hidden = false;
         setMode('signin');
-        showMessage(`Account created. Check ${createdEmail} for the verification link, then sign in.`);
+        showMessage(`We sent a verification link to ${createdEmail}. Don’t forget to check your junk mail too.`);
       } else {
         const credential = await signInWithEmailAndPassword(auth, email, password);
         await reload(credential.user);
         if (!credential.user.emailVerified) {
           await sendEmailVerification(credential.user);
-          await signOut(auth);
-          showMessage(`Please verify ${credential.user.email}. We sent another verification link.`);
+          resendButton.hidden = false;
+          checkVerificationButton.hidden = false;
+          showMessage(`Please verify ${credential.user.email}. We sent another link; check your junk mail too.`);
         }
       }
     } catch (error) {
       showMessage(friendlyError(error), true);
     } finally {
       submitButton.disabled = false;
+    }
+  });
+
+  resendButton.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      showMessage('Sign in with your email and password first, then you can resend the verification email.', true);
+      return;
+    }
+    try {
+      await reload(user);
+      if (user.emailVerified) {
+        await showPlanner(user);
+        return;
+      }
+      await sendEmailVerification(user);
+      showMessage(`A new verification link was sent to ${user.email}. Check your junk mail too.`);
+    } catch (error) {
+      showMessage(friendlyError(error), true);
+    }
+  });
+
+  checkVerificationButton.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      showMessage('Sign in first, then check your email again.', true);
+      return;
+    }
+    try {
+      await reload(user);
+      if (user.emailVerified) await showPlanner(user);
+      else showMessage('It is not verified yet. Check your inbox and junk mail, or resend the email.');
+    } catch (error) {
+      showMessage(friendlyError(error), true);
     }
   });
 
@@ -91,8 +129,16 @@ if (!firebaseConfigured) {
     if (!user.emailVerified) {
       authScreen.hidden = false;
       planner.hidden = true;
+      resendButton.hidden = false;
+      checkVerificationButton.hidden = false;
+      if (!message.textContent) showMessage(`Please verify ${user.email}. Check your inbox and junk mail.`);
       return;
     }
+    await showPlanner(user);
+  });
+}
+
+async function showPlanner(user) {
     const previousUid = sessionStorage.getItem('daybook-auth-uid');
     if (previousUid && previousUid !== user.uid) {
       sessionStorage.setItem('daybook-auth-uid', user.uid);
@@ -100,6 +146,8 @@ if (!firebaseConfigured) {
       return;
     }
     sessionStorage.setItem('daybook-auth-uid', user.uid);
+    resendButton.hidden = true;
+    checkVerificationButton.hidden = true;
     window.daybookUser = { uid: user.uid, email: user.email };
     window.daybookAuthEnabled = true;
     authScreen.hidden = true;
@@ -108,7 +156,6 @@ if (!firebaseConfigured) {
       window.daybookPlannerLoaded = true;
       await import('./app.js');
     }
-  });
 }
 
 function friendlyError(error) {
