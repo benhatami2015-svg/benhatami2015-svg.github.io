@@ -19,5 +19,5 @@
 @media(max-width:650px){.welcome-banner{height:115px;min-height:115px;padding:16px 12px;gap:10px}.welcome-banner-icon{width:31px;height:31px}.welcome-banner strong{font-size:14px}.welcome-banner div span{font-size:11px}}
 .pull-refresh-indicator{position:fixed;z-index:10000;top:0;left:0;right:0;height:0;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;padding:0 0 8px;box-sizing:border-box;color:#6f60b8;background:var(--paper);font:600 12px 'DM Sans',sans-serif;pointer-events:none;transition:height .12s ease}.pull-refresh-indicator span{opacity:.95}.pull-refresh-indicator.refreshing span{animation:refresh-pulse .8s ease-in-out infinite alternate}@keyframes refresh-pulse{to{opacity:.45}}
 
-.welcome-banner-icon{font-size:20px}
-@media(max-width:650px){.welcome-banner-icon{font-size:18px}}
+.welcome-banner-icon{font-size:25px}
+@media(max-width:650px){.welcome-banner-icon{font-size:22.5px}}
